@@ -15,7 +15,6 @@ class MainActivity : AppCompatActivity(), ShakeDetector.Listener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
         val sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         val sd = ShakeDetector(this)
         sd.setSensitivity(SENSITIVITY_LIGHT)
@@ -23,6 +22,6 @@ class MainActivity : AppCompatActivity(), ShakeDetector.Listener {
     }
 
     override fun hearShake() {
-        text.text = "I was shaked..."
+        //hint.text = "I was shaked..."
     }
 }

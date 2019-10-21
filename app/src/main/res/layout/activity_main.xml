@@ -15,31 +15,80 @@
         app:layout_constraintGuide_percent="0.2" />
 
     <TextView
-        android:id="@+id/text"
+        android:id="@+id/hint_text"
         style="@style/HintTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="24dp"
         android:gravity="center"
+        android:padding="24dp"
         android:text="@string/title_hint"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@id/top_guideline" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/ball_guideline"
+        android:id="@+id/ball_guideline_top"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.45" />
+        app:layout_constraintGuide_percent="0.4" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/ball_guideline_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.75" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/ball_guideline_left"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.2" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/ball_guideline_right"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.8" />
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/ball_bg"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:src="@drawable/background_ball"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/ball_guideline" />
+        app:layout_constraintBottom_toBottomOf="@id/ball_guideline_bottom"
+        app:layout_constraintLeft_toLeftOf="@id/ball_guideline_left"
+        app:layout_constraintRight_toRightOf="@id/ball_guideline_right"
+        app:layout_constraintTop_toTopOf="@id/ball_guideline_top" />
 
+    <ImageView
+        android:id="@+id/answer_bg"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:paddingLeft="24sp"
+        android:paddingTop="68sp"
+        android:paddingRight="24sp"
+        android:paddingBottom="16sp"
+        android:src="@drawable/background_triangle"
+        app:layout_constraintBottom_toBottomOf="@id/ball_bg"
+        app:layout_constraintLeft_toLeftOf="@id/ball_bg"
+        app:layout_constraintRight_toRightOf="@id/ball_bg"
+        app:layout_constraintTop_toTopOf="@id/ball_bg" />
+
+    <TextView
+        android:id="@+id/answer_text"
+        style="@style/AnswertTextStyle"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:textAllCaps="true"
+        app:layout_constraintBottom_toBottomOf="@id/ball_bg"
+        app:layout_constraintLeft_toLeftOf="@id/ball_bg"
+        app:layout_constraintRight_toRightOf="@id/ball_bg"
+        app:layout_constraintTop_toTopOf="@id/ball_bg"
+        tools:text="Yes" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
