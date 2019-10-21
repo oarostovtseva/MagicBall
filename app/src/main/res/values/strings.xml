@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MagicBall</string>
+    <string name="app_name">Magic ball</string>
     <string name="title_hint">Shake the phone</string>
     <string name="question">Ask me</string>
 </resources>
