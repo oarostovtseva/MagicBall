@@ -1,0 +1,53 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+android {
+    compileSdkVersion Versions.compile_sdk
+    defaultConfig {
+        applicationId "com.orost.magicball"
+        minSdkVersion Versions.min_sdk
+        targetSdkVersion Versions.target_sdk
+        versionCode 1
+        versionName Versions.versionName
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        debug {
+            debuggable true
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'mb-rules.pro'
+        }
+        release {
+            debuggable false
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'mb-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation Kotlin.stdlib
+
+    implementation AndroidX.core
+    implementation AndroidX.design
+    implementation AndroidX.constraint_layout
+
+    implementation Koin.core
+    implementation Koin.android
+    implementation Koin.viewmodel
+
+    implementation Lifecycle.viewmodel_ktx
+    implementation Lifecycle.extensions
+    kapt Lifecycle.compiler
+
+    implementation Timber.timber
+    implementation Sensors.seismic
+
+    testImplementation Testing.junit_jupiter
+    testImplementation Testing.arch_core
+    testImplementation Testing.mockk
+    testImplementation Koin.test
+
+}

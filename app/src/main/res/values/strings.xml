@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">MagicBall</string>
+    <string name="title_hint">Shake the phone</string>
+</resources>
