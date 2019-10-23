@@ -5,6 +5,7 @@
     <color name="colorAccent">@color/colorBrightPurple</color>
 
     <color name="colorBrightPurple">#ae52d4</color>
+    <color name="colorBrightBlue">#3388FF</color>
     <color name="colorDarkGrey">#373737</color>
     <color name="colorLightGrey">#424242</color>
 </resources>
