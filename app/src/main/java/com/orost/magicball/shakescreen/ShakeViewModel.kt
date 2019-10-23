@@ -18,7 +18,6 @@ class ShakeViewModel(
     private val coroutineContextProvider: CoroutineContextProvider
 ) : ViewModel() {
 
-    private val questionText: String = applicationContext.resources.getString(R.string.question)
     private val answersArray: List<String> = applicationContext.resources.getStringArray(R.array.answers).asList()
 
     private var isInProgress = false // We get action twice from the shakeDetector sometimes
@@ -31,7 +30,7 @@ class ShakeViewModel(
         viewModelScope.launch(coroutineContextProvider.main) {
             answer.postValue(answersArray.getRandomValue())
             delay(SHOW_ANSWER_DELAY)
-            answer.postValue(questionText)
+            answer.postValue("")
             isInProgress = false
         }
     }

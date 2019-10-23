@@ -8,7 +8,7 @@
         <item>No</item>
         <item>Maybe</item>
         <item>Probably</item>
-        <item>I don\'t know</item>
+        <item>I don\'t \nknow</item>
     </string-array>
 
 </resources>
