@@ -6,12 +6,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import com.orost.magicball.R
 import com.orost.magicball.ui.BaseFragment
+import com.orost.magicball.utils.fadeIn
+import com.orost.magicball.utils.fadeOut
 import com.squareup.seismic.ShakeDetector
 import kotlinx.android.synthetic.main.fragment_main.*
 import org.koin.android.ext.android.inject
 import timber.log.Timber
+
+internal const val ANIMATION_FADE_DURATION = 500L
 
 class ShakeFragment : BaseFragment(), ShakeDetector.Listener {
 
@@ -26,8 +31,18 @@ class ShakeFragment : BaseFragment(), ShakeDetector.Listener {
 
     }
 
+    override fun subscribeToLiveData() {
+        shakeViewModel.answer.observe(this, Observer {
+            Timber.d("Got an answer: $it")
+            answer_text.fadeOut(ANIMATION_FADE_DURATION) {
+                answer_text.text = it
+                answer_text.fadeIn(ANIMATION_FADE_DURATION)
+            }
+        })
+    }
+
     override fun hearShake() {
-        answer_text.text = shakeViewModel.getAnswer()
+        shakeViewModel.getAnswer()
     }
 
     private fun initShakeDetector() {

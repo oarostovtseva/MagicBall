@@ -12,6 +12,7 @@ abstract class BaseFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initUI(savedInstanceState)
+        subscribeToLiveData()
     }
 
     /**
@@ -19,4 +20,8 @@ abstract class BaseFragment : Fragment() {
      */
     abstract fun initUI(savedInstanceState: Bundle?)
 
+    /**
+     * Hook method to make a subscription to live data. Called inside [onViewCreated]
+     */
+    abstract fun subscribeToLiveData()
 }
