@@ -23,17 +23,17 @@ internal const val ANIMATION_FADE_DURATION = 500L
 
 class ShakeFragment : BaseFragment(), ShakeDetector.Listener {
 
-    private val firebaseAnalytics: FirebaseAnalytics by lazy { FirebaseAnalytics.getInstance(requireActivity()) }
+    private val firebaseAnalytics: FirebaseAnalytics by inject()
     private val shakeViewModel: ShakeViewModel by inject()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         initShakeDetector()
+        firebaseAnalytics.setCurrentScreen(requireActivity(), ShakeFragment::class.java.simpleName, null)
         return inflater.inflate(R.layout.fragment_main, container, false)
     }
 
     override fun subscribeToLiveData() {
         shakeViewModel.answer.observe(this, Observer {
-            Timber.d("Got an answer: $it")
             sendAnalytics(it)
             answer_bg.shake()
             answer_text.fadeOut(ANIMATION_FADE_DURATION) {
@@ -56,9 +56,11 @@ class ShakeFragment : BaseFragment(), ShakeDetector.Listener {
     }
 
     private fun sendAnalytics(answer: String) {
+        if (answer.isEmpty()) return
+        Timber.d("Got an answer: $answer")
         val bundle = Bundle().apply {
-            putString("action_shaking", "Got an answer: $answer")
+            putString("answer", answer)
         }
-        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
+        firebaseAnalytics.logEvent("shaking", bundle)
     }
 }
