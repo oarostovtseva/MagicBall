@@ -29,6 +29,11 @@
             <size
                 android:width="190dp"
                 android:height="190dp" />
+            <gradient
+                android:endColor="@color/colorDarkGrey"
+                android:gradientRadius="95%p"
+                android:startColor="@android:color/black"
+                android:type="radial" />
         </shape>
     </item>
 
