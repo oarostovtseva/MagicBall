@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.orost.magicball.R
 import com.orost.magicball.utils.CoroutineContextProvider
+import com.orost.magicball.utils.SingleLiveEvent
 import kotlinx.coroutines.*
 import kotlinx.coroutines.NonCancellable.isCancelled
 import timber.log.Timber
@@ -22,7 +23,7 @@ class ShakeViewModel(
 
     private var isInProgress = false // We get action twice from the shakeDetector sometimes
 
-    val answer = MutableLiveData<String>()
+    val answer = SingleLiveEvent<String>()
 
     fun getAnswer() {
         if (isInProgress) return else isInProgress = true

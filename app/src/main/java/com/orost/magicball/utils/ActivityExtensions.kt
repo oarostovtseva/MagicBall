@@ -17,19 +17,3 @@ internal fun AppCompatActivity.addFragment(
         commit()
     }
 }
-
-internal fun AppCompatActivity.replaceFragment(
-    containerId: Int,
-    fragment: Fragment,
-    tag: String = "",
-    arguments: Bundle? = null,
-    animation: ScreenAnimations? = null
-) {
-    arguments?.let { fragment.arguments = it }
-    supportFragmentManager.beginTransaction().apply {
-        animation?.let { setCustomAnimations(it.enter, it.exit, it.popEnter, it.popExit) }
-        replace(containerId, fragment, tag)
-        addToBackStack(null)
-        commit()
-    }
-}
