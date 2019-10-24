@@ -18,4 +18,14 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="HelpTextStyle" parent="@android:style/TextAppearance.Small">
+        <item name="android:fontFamily">@font/crochet_family</item>
+        <item name="android:textSize">23sp</item>
+        <item name="android:textStyle">italic|bold</item>
+    </style>
+
+    <style name="ContactDevTextStyle" parent="@android:style/TextAppearance.Small">
+        <item name="android:textStyle">italic</item>
+    </style>
+
 </resources>

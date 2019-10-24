@@ -17,7 +17,5 @@ class MainActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             addFragment(R.id.fragment_container, get<ShakeFragment>())
         }
-
     }
-
 }

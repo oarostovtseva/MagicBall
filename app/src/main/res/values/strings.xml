@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Magic ball</string>
-    <string name="title_hint">Shake the phone</string>
+    <string name="title_hint">Ask a question\nShake the phone</string>
     <string name="question">Ask me</string>
 
     <string-array name="answers">
@@ -10,5 +10,11 @@
         <item>Probably</item>
         <item>I don\'t \nknow</item>
     </string-array>
+
+    <string name="help_info">Hi peeps,\nThis app is only for fun. It doesn\'t have any psychic abilities.
+        So don\'t take it close to the heart :) \n\nEnjoy!
+    </string>
+
+    <string name="dev_sign">\@github:oarostovtseva</string>
 
 </resources>

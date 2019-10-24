@@ -8,14 +8,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import com.google.firebase.analytics.FirebaseAnalytics
-import com.orost.magicball.MBApplication
 import com.orost.magicball.R
+import com.orost.magicball.helpscreen.HelpFragment
 import com.orost.magicball.ui.BaseFragment
+import com.orost.magicball.utils.FadeAnimation
 import com.orost.magicball.utils.fadeIn
 import com.orost.magicball.utils.fadeOut
+import com.orost.magicball.utils.replaceWithBackStack
 import com.orost.magicball.utils.shake
 import com.squareup.seismic.ShakeDetector
-import kotlinx.android.synthetic.main.fragment_main.*
+import kotlinx.android.synthetic.main.fragment_shake.*
+import org.koin.android.ext.android.get
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 
@@ -23,13 +26,37 @@ internal const val ANIMATION_FADE_DURATION = 500L
 
 class ShakeFragment : BaseFragment(), ShakeDetector.Listener {
 
+    private val sensorManager: SensorManager by lazy {
+        requireContext().getSystemService(Context.SENSOR_SERVICE) as SensorManager
+    }
+
+    private val shakeDetector: ShakeDetector = ShakeDetector(this).apply { setSensitivity(ShakeDetector.SENSITIVITY_LIGHT) }
+
     private val firebaseAnalytics: FirebaseAnalytics by inject()
     private val shakeViewModel: ShakeViewModel by inject()
 
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        startShakeDetector()
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        initShakeDetector()
-        firebaseAnalytics.setCurrentScreen(requireActivity(), ShakeFragment::class.java.simpleName, null)
-        return inflater.inflate(R.layout.fragment_main, container, false)
+        return inflater.inflate(R.layout.fragment_shake, container, false)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        stopShakeDetector()
+    }
+
+    override fun initUI(savedInstanceState: Bundle?) {
+        btn_help.setOnClickListener {
+            fragmentManager?.replaceWithBackStack(
+                    R.id.fragment_container,
+                    get<HelpFragment>(),
+                    FadeAnimation
+            )
+        }
     }
 
     override fun subscribeToLiveData() {
@@ -47,12 +74,14 @@ class ShakeFragment : BaseFragment(), ShakeDetector.Listener {
         shakeViewModel.getAnswer()
     }
 
-    private fun initShakeDetector() {
-        val sensorManager = requireContext().getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        val sd = ShakeDetector(this)
-        sd.setSensitivity(ShakeDetector.SENSITIVITY_LIGHT)
-        sd.start(sensorManager)
+    private fun startShakeDetector() {
+        shakeDetector.start(sensorManager)
         Timber.d("Shake detector was initialized")
+    }
+
+    private fun stopShakeDetector() {
+        shakeDetector.stop()
+        Timber.d("Shake detector was stopped")
     }
 
     private fun sendAnalytics(answer: String) {

@@ -18,10 +18,10 @@ abstract class BaseFragment : Fragment() {
     /**
      * Hook method for initialize UI elements. Called inside [onViewCreated]
      */
-    open fun initUI(savedInstanceState: Bundle?) {}
+    abstract fun initUI(savedInstanceState: Bundle?)
 
     /**
      * Hook method to make a subscription to live data. Called inside [onViewCreated]
      */
-    open fun subscribeToLiveData() {}
+    abstract fun subscribeToLiveData()
 }
