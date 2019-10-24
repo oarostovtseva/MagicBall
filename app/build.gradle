@@ -32,6 +32,8 @@ dependencies {
     implementation Kotlin.coroutines
     implementation Kotlin.coroutines_android
 
+    implementation GoogleServices.firebase_core
+
     implementation AndroidX.core
     implementation AndroidX.design
     implementation AndroidX.constraint_layout
@@ -53,3 +55,5 @@ dependencies {
     testImplementation Koin.test
 
 }
+
+apply plugin: 'com.google.gms.google-services'

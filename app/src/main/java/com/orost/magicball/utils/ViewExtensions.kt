@@ -25,6 +25,6 @@ internal fun View.fadeOut(duration: Long, onAnimationEndAction: () -> Unit) {
         }).start()
 }
 
-internal fun View.shake(durationTime: Long) {
+internal fun View.shake() {
     startAnimation(AnimationUtils.loadAnimation(context, R.anim.bounce))
 }

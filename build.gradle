@@ -10,6 +10,7 @@ buildscript {
     dependencies {
         classpath Plugins.android_gradle
         classpath Plugins.kotlin_gradle
+        classpath GoogleServices.play_services
     }
 }
 

@@ -30,6 +30,14 @@ object Kotlin {
     val coroutines_test = "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version"
 }
 
+object GoogleServices {
+    private const val google_services_version = "4.2.0"
+    private const val firebase_core_version = "17.0.0"
+
+    val play_services = "com.google.gms:google-services:$google_services_version"
+    val firebase_core = "com.google.firebase:firebase-core:$firebase_core_version"
+}
+
 object AndroidX {
     private const val androidx_version = "1.0.0"
     private const val androidx_test_version = "1.2.0"

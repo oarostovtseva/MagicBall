@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.orost.magicball.MBApplication
 import com.orost.magicball.R
 import com.orost.magicball.ui.BaseFragment
 import com.orost.magicball.utils.fadeIn
@@ -21,6 +23,7 @@ internal const val ANIMATION_FADE_DURATION = 500L
 
 class ShakeFragment : BaseFragment(), ShakeDetector.Listener {
 
+    private val firebaseAnalytics: FirebaseAnalytics by lazy { FirebaseAnalytics.getInstance(requireActivity()) }
     private val shakeViewModel: ShakeViewModel by inject()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -28,14 +31,11 @@ class ShakeFragment : BaseFragment(), ShakeDetector.Listener {
         return inflater.inflate(R.layout.fragment_main, container, false)
     }
 
-    override fun initUI(savedInstanceState: Bundle?) {
-
-    }
-
     override fun subscribeToLiveData() {
         shakeViewModel.answer.observe(this, Observer {
             Timber.d("Got an answer: $it")
-            answer_bg.shake(1000)
+            sendAnalytics(it)
+            answer_bg.shake()
             answer_text.fadeOut(ANIMATION_FADE_DURATION) {
                 answer_text.text = it
                 answer_text.fadeIn(ANIMATION_FADE_DURATION)
@@ -53,5 +53,12 @@ class ShakeFragment : BaseFragment(), ShakeDetector.Listener {
         sd.setSensitivity(ShakeDetector.SENSITIVITY_LIGHT)
         sd.start(sensorManager)
         Timber.d("Shake detector was initialized")
+    }
+
+    private fun sendAnalytics(answer: String) {
+        val bundle = Bundle().apply {
+            putString("action_shaking", "Got an answer: $answer")
+        }
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
     }
 }
