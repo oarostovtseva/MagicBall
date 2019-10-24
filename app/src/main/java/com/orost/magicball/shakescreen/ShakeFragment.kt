@@ -1,7 +1,5 @@
 package com.orost.magicball.shakescreen
 
-import android.content.Context
-import android.hardware.SensorManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -20,32 +18,29 @@ import com.squareup.seismic.ShakeDetector
 import kotlinx.android.synthetic.main.fragment_shake.*
 import org.koin.android.ext.android.get
 import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 internal const val ANIMATION_FADE_DURATION = 500L
 
 class ShakeFragment : BaseFragment(), ShakeDetector.Listener {
 
-    private val sensorManager: SensorManager by lazy {
-        requireContext().getSystemService(Context.SENSOR_SERVICE) as SensorManager
-    }
-
     private val shakeDetector: ShakeDetector = ShakeDetector(this).apply { setSensitivity(ShakeDetector.SENSITIVITY_LIGHT) }
 
     private val firebaseAnalytics: FirebaseAnalytics by inject()
-    private val shakeViewModel: ShakeViewModel by inject()
-
-    override fun onAttach(context: Context?) {
-        super.onAttach(context)
-        startShakeDetector()
-    }
+    private val shakeViewModel: ShakeViewModel by viewModel()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_shake, container, false)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onStart() {
+        super.onStart()
+        startShakeDetector()
+    }
+
+    override fun onPause() {
+        super.onPause()
         stopShakeDetector()
     }
 
@@ -75,7 +70,7 @@ class ShakeFragment : BaseFragment(), ShakeDetector.Listener {
     }
 
     private fun startShakeDetector() {
-        shakeDetector.start(sensorManager)
+        shakeDetector.start(get())
         Timber.d("Shake detector was initialized")
     }
 
