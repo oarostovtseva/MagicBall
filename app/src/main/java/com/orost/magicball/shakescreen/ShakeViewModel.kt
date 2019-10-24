@@ -27,7 +27,7 @@ class ShakeViewModel(
     fun getAnswer() {
         if (isInProgress) return else isInProgress = true
 
-        viewModelScope.launch(coroutineContextProvider.main) {
+        viewModelScope.launch(coroutineContextProvider.io) {
             answer.postValue(answersArray.getRandomValue())
             delay(SHOW_ANSWER_DELAY)
             answer.postValue("")

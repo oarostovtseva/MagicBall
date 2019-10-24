@@ -2,7 +2,9 @@ package com.orost.magicball.utils
 
 import android.animation.Animator
 import android.view.View
+import android.view.animation.AnimationUtils
 import android.view.animation.LinearInterpolator
+import com.orost.magicball.R
 
 internal fun View.fadeIn(duration: Long) {
     alpha = 0f
@@ -21,4 +23,8 @@ internal fun View.fadeOut(duration: Long, onAnimationEndAction: () -> Unit) {
                 onAnimationEndAction.invoke()
             }
         }).start()
+}
+
+internal fun View.shake(durationTime: Long) {
+    startAnimation(AnimationUtils.loadAnimation(context, R.anim.bounce))
 }

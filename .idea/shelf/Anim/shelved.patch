@@ -1,0 +1,127 @@
+Index: app/src/main/java/com/orost/magicball/shakescreen/ShakeViewModel.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.orost.magicball.shakescreen\n\nimport android.content.Context\nimport androidx.lifecycle.MutableLiveData\nimport androidx.lifecycle.ViewModel\nimport androidx.lifecycle.viewModelScope\nimport com.orost.magicball.R\nimport com.orost.magicball.utils.CoroutineContextProvider\nimport kotlinx.coroutines.*\nimport kotlinx.coroutines.NonCancellable.isCancelled\nimport timber.log.Timber\nimport kotlin.random.Random\n\ninternal const val SHOW_ANSWER_DELAY = 2000L\n\nclass ShakeViewModel(\n    applicationContext: Context,\n    private val coroutineContextProvider: CoroutineContextProvider\n) : ViewModel() {\n\n    private val answersArray: List<String> = applicationContext.resources.getStringArray(R.array.answers).asList()\n\n    private var isInProgress = false // We get action twice from the shakeDetector sometimes\n\n    val answer = MutableLiveData<String>()\n\n    fun getAnswer() {\n        if (isInProgress) return else isInProgress = true\n\n        viewModelScope.launch(coroutineContextProvider.main) {\n            answer.postValue(answersArray.getRandomValue())\n            delay(SHOW_ANSWER_DELAY)\n            answer.postValue(\"\")\n            isInProgress = false\n        }\n    }\n\n}\n\nprivate fun List<String>.getRandomValue() = get(Random.nextInt(0, size))\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/orost/magicball/shakescreen/ShakeViewModel.kt	(revision 2fc6fa7f5b9a4a9d50bf21ab125385e1d491dcb0)
++++ app/src/main/java/com/orost/magicball/shakescreen/ShakeViewModel.kt	(date 1571898087000)
+@@ -27,7 +27,7 @@
+     fun getAnswer() {
+         if (isInProgress) return else isInProgress = true
+ 
+-        viewModelScope.launch(coroutineContextProvider.main) {
++        viewModelScope.launch(coroutineContextProvider.io) {
+             answer.postValue(answersArray.getRandomValue())
+             delay(SHOW_ANSWER_DELAY)
+             answer.postValue("")
+Index: app/src/main/res/anim/bounce.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/anim/bounce.xml	(date 1571900301000)
++++ app/src/main/res/anim/bounce.xml	(date 1571900301000)
+@@ -0,0 +1,10 @@
++<?xml version="1.0" encoding="utf-8"?>
++<set xmlns:android="http://schemas.android.com/apk/res/android"
++
++    android:interpolator="@android:anim/bounce_interpolator">
++
++    <translate
++        android:duration="1000"
++        android:fromXDelta="1%p"
++        android:toXDelta="0%p" />
++</set>
+\ No newline at end of file
+Index: app/src/main/java/com/orost/magicball/shakescreen/ShakeFragment.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.orost.magicball.shakescreen\n\nimport android.content.Context\nimport android.hardware.SensorManager\nimport android.os.Bundle\nimport android.view.LayoutInflater\nimport android.view.View\nimport android.view.ViewGroup\nimport androidx.lifecycle.Observer\nimport com.orost.magicball.R\nimport com.orost.magicball.ui.BaseFragment\nimport com.orost.magicball.utils.fadeIn\nimport com.orost.magicball.utils.fadeOut\nimport com.squareup.seismic.ShakeDetector\nimport kotlinx.android.synthetic.main.fragment_main.*\nimport org.koin.android.ext.android.inject\nimport timber.log.Timber\n\ninternal const val ANIMATION_FADE_DURATION = 500L\n\nclass ShakeFragment : BaseFragment(), ShakeDetector.Listener {\n\n    private val shakeViewModel: ShakeViewModel by inject()\n\n    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {\n        initShakeDetector()\n        return inflater.inflate(R.layout.fragment_main, container, false)\n    }\n\n    override fun initUI(savedInstanceState: Bundle?) {\n\n    }\n\n    override fun subscribeToLiveData() {\n        shakeViewModel.answer.observe(this, Observer {\n            Timber.d(\"Got an answer: $it\")\n            answer_text.fadeOut(ANIMATION_FADE_DURATION) {\n                answer_text.text = it\n                answer_text.fadeIn(ANIMATION_FADE_DURATION)\n            }\n        })\n    }\n\n    override fun hearShake() {\n        shakeViewModel.getAnswer()\n    }\n\n    private fun initShakeDetector() {\n        val sensorManager = requireContext().getSystemService(Context.SENSOR_SERVICE) as SensorManager\n        val sd = ShakeDetector(this)\n        sd.setSensitivity(ShakeDetector.SENSITIVITY_LIGHT)\n        sd.start(sensorManager)\n        Timber.d(\"Shake detector was initialized\")\n    }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/orost/magicball/shakescreen/ShakeFragment.kt	(revision 2fc6fa7f5b9a4a9d50bf21ab125385e1d491dcb0)
++++ app/src/main/java/com/orost/magicball/shakescreen/ShakeFragment.kt	(date 1571898795000)
+@@ -11,6 +11,7 @@
+ import com.orost.magicball.ui.BaseFragment
+ import com.orost.magicball.utils.fadeIn
+ import com.orost.magicball.utils.fadeOut
++import com.orost.magicball.utils.shake
+ import com.squareup.seismic.ShakeDetector
+ import kotlinx.android.synthetic.main.fragment_main.*
+ import org.koin.android.ext.android.inject
+@@ -34,6 +35,7 @@
+     override fun subscribeToLiveData() {
+         shakeViewModel.answer.observe(this, Observer {
+             Timber.d("Got an answer: $it")
++            answer_bg.shake(1000)
+             answer_text.fadeOut(ANIMATION_FADE_DURATION) {
+                 answer_text.text = it
+                 answer_text.fadeIn(ANIMATION_FADE_DURATION)
+Index: app/src/main/res/drawable/background_ball.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\n<layer-list xmlns:android=\"http://schemas.android.com/apk/res/android\">\n    <item>\n        <shape android:shape=\"oval\">\n            <solid android:color=\"@color/colorLightGrey\" />\n            <size\n                android:width=\"200dp\"\n                android:height=\"200dp\" />\n        </shape>\n    </item>\n    <item>\n        <shape android:shape=\"oval\">\n            <stroke\n                android:width=\"5dp\"\n                android:color=\"@android:color/transparent\" />\n            <solid android:color=\"@color/colorDarkGrey\" />\n            <size\n                android:width=\"195dp\"\n                android:height=\"195dp\" />\n        </shape>\n    </item>\n\n    <item>\n        <shape android:shape=\"oval\">\n            <stroke\n                android:width=\"10dp\"\n                android:color=\"@android:color/transparent\" />\n            <solid android:color=\"@android:color/black\" />\n            <size\n                android:width=\"190dp\"\n                android:height=\"190dp\" />\n        </shape>\n    </item>\n\n</layer-list>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/drawable/background_ball.xml	(revision 2fc6fa7f5b9a4a9d50bf21ab125385e1d491dcb0)
++++ app/src/main/res/drawable/background_ball.xml	(date 1571900227000)
+@@ -29,6 +29,11 @@
+             <size
+                 android:width="190dp"
+                 android:height="190dp" />
++            <gradient
++                android:endColor="@color/colorDarkGrey"
++                android:gradientRadius="95%p"
++                android:startColor="@android:color/black"
++                android:type="radial" />
+         </shape>
+     </item>
+ 
+Index: .idea/codeStyles/codeStyleConfig.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><component name=\"ProjectCodeStyleConfiguration\">\n  <state>\n    <option name=\"USE_PER_PROJECT_SETTINGS\" value=\"true\" />\n    <option name=\"PREFERRED_PROJECT_CODE_STYLE\" value=\"Default\" />\n  </state>\n</component>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/codeStyles/codeStyleConfig.xml	(revision 2fc6fa7f5b9a4a9d50bf21ab125385e1d491dcb0)
++++ .idea/codeStyles/codeStyleConfig.xml	(date 1571900189000)
+@@ -1,6 +1,5 @@
+ <component name="ProjectCodeStyleConfiguration">
+   <state>
+-    <option name="USE_PER_PROJECT_SETTINGS" value="true" />
+     <option name="PREFERRED_PROJECT_CODE_STYLE" value="Default" />
+   </state>
+ </component>
+\ No newline at end of file
+Index: app/src/main/java/com/orost/magicball/utils/ViewExtensions.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.orost.magicball.utils\n\nimport android.animation.Animator\nimport android.view.View\nimport android.view.animation.LinearInterpolator\n\ninternal fun View.fadeIn(duration: Long) {\n    alpha = 0f\n    visibility = View.VISIBLE\n    animate().setDuration(duration).setInterpolator(LinearInterpolator()).alpha(1f).setListener(null).start()\n}\n\ninternal fun View.fadeOut(duration: Long, onAnimationEndAction: () -> Unit) {\n    clearAnimation()\n    alpha = 1f\n    animate().setDuration(duration).setInterpolator(LinearInterpolator()).alpha(0f)\n        .setListener(object : OnAnimatioEndListener() {\n            override fun onAnimationEnd(animation: Animator?) {\n                visibility = View.GONE\n                alpha = 1f\n                onAnimationEndAction.invoke()\n            }\n        }).start()\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/orost/magicball/utils/ViewExtensions.kt	(revision 2fc6fa7f5b9a4a9d50bf21ab125385e1d491dcb0)
++++ app/src/main/java/com/orost/magicball/utils/ViewExtensions.kt	(date 1571899746000)
+@@ -2,7 +2,9 @@
+ 
+ import android.animation.Animator
+ import android.view.View
++import android.view.animation.AnimationUtils
+ import android.view.animation.LinearInterpolator
++import com.orost.magicball.R
+ 
+ internal fun View.fadeIn(duration: Long) {
+     alpha = 0f
+@@ -22,3 +24,7 @@
+             }
+         }).start()
+ }
++
++internal fun View.shake(durationTime: Long) {
++    startAnimation(AnimationUtils.loadAnimation(context, R.anim.bounce))
++}
