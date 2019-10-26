@@ -22,7 +22,7 @@ object Plugins {
 }
 
 object Kotlin {
-    private const val coroutines_version = "1.3.2"
+    private const val coroutines_version = "1.2.2"
 
     val stdlib = "org.jetbrains.kotlin:kotlin-stdlib:${Versions.kotlin}"
     val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
